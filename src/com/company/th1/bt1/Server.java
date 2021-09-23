@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements Calculator {
+public class Server {
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(2207);
@@ -14,6 +14,7 @@ public class Server implements Calculator {
                 Socket client = serverSocket.accept();
                 DataInputStream dis = new DataInputStream(client.getInputStream());
                 DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+                Processor processor = new Processor();
 
                 while (true) {
                     int operator = 999;
@@ -25,16 +26,16 @@ public class Server implements Calculator {
                     int c = 0;
                     switch (operator) {
                         case 1:
-                            c = a + b;
+                            c = processor.plus(a,b);
                             break;
                         case 2:
-                            c = a - b;
+                            c = processor.minus(a,b);
                             break;
                         case 3:
-                            c = a * b;
+                            c = processor.multiply(a,b);
                             break;
                         case 4:
-                            c = a / b;
+                            c = processor.divide(a,b);
                     }
                     dos.writeInt(c);
                 }
@@ -48,33 +49,7 @@ public class Server implements Calculator {
         }
     }
 
-    @Override
-    public int plus(int a, int b) {
-        return a + b;
-    }
-
-    @Override
-    public int minus(int a, int b) {
-        return a - b;
-    }
-
-    @Override
-    public int divide(int a, int b) {
-        return a / b;
-    }
-
-    @Override
-    public int multiply(int a, int b) {
-        return a * b;
-    }
 }
 
-interface Calculator {
-    int plus(int a, int b);
 
-    int minus(int a, int b);
 
-    int divide(int a, int b);
-
-    int multiply(int a, int b);
-}

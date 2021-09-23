@@ -7,18 +7,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server {
+public class Server  {
 
-    private static ArrayList<Person> listData = new ArrayList<>();
-    private static int count = 0;
+    public static ArrayList<Person> listData = new ArrayList<>();
+    public static int count = 0;
 
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(15000);
             while (true) {
                 Socket socket = serverSocket.accept();
+                // create ObjectOutputStream before ObjectInputStream because deadlock - streamheader
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                DaoImpl dao = new DaoImpl();
 
                 while (true) {
                     int operator = 999;
@@ -27,31 +29,15 @@ public class Server {
 
                     if (operator == 1){
                         Person p = (Person) ois.readObject();
-                        p.setId(count++);
-                        System.out.println(p);
-                        listData.add(p);
+                        dao.add(p);
                     }else if (operator == 2){
                         String name = (String) ois.readObject();
-                        System.out.println(name);
-                        String result = "not found";
-                        for (Person p : listData){
-                            if (p.getName().equals(name)){
-                                result = p.getPhoneNumber();
-                                break;
-                            }
-                        }
-                        oos.writeObject(result);
+                        oos.writeObject(dao.getPhone(name));
                     }else if (operator == 3 ){
-                        oos.writeObject(listData);
+                        oos.writeObject(dao.getALl());
                     }else if (operator == 4){
                         String name = (String) ois.readObject();
-                        for (Person p : listData){
-                            if (p.getName().equals(name)){
-                                oos.writeObject(p);
-                                break;
-                            }
-                        }
-                        oos.writeObject(null);
+                        oos.writeObject(dao.search(name));
                     }
 
                 }
@@ -66,4 +52,7 @@ public class Server {
             e.printStackTrace();
         }
     }
+
 }
+
+
