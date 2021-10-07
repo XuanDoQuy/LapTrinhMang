@@ -2,6 +2,7 @@ package com.company.th1.bt2;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -18,7 +19,6 @@ public class Client {
             System.out.println("aa");
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
             System.out.println("aaa");
-
 
             while (true) {
                 showMenu();
