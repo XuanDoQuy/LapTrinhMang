@@ -47,6 +47,7 @@ public class KeyboardControl {
             robot.keyRelease(keyCodes[i]);
         }
     }
+
     public void typeCharacter(char character) {
         switch (character) {
             case 'a': doType(VK_A); break;

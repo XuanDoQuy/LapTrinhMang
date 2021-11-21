@@ -46,10 +46,10 @@ public class Server {
                         boolean rightClick = dis.readBoolean();
                         System.out.println("x,y  = " + x + "  " + y);
                         if (x != 0 || y != 0) {
-                            Point point = MouseInfo.getPointerInfo().getLocation();
+                            Point point = MouseInfo.getPointerInfo().getLocation(); //get postion of mouse
                             float nowx = point.x;
                             float nowy = point.y;
-                            int n = 7;
+                            int n = 7;// chia lam 7 buoc di chuyen nho
                             int t = 7;
                             double dx = (x) / ((double) n);
                             double dy = (y) / ((double) n);
@@ -58,6 +58,7 @@ public class Server {
                                 robot.delay((int) dt);
                                 robot.mouseMove((int) (nowx + dx * step), (int) (nowy + dy * step));
                             }
+
 
 //                        robot.mouseMove((int) nowx + x, (int) nowy + y);
                         } else if (wheel != 0) {
@@ -84,6 +85,9 @@ public class Server {
                         initCapture = false;
                     } else if(type.equals("powerpoint")) {
                         System.out.println("on mode powerpoint");
+                        int action = dis.readInt();
+                        int x = dis.readInt();
+                        int y = dis.readInt();
                         if (!initCapture){
                             try {
                                 new CaptureScreenThread(type, dos).start();
@@ -92,9 +96,6 @@ public class Server {
                                 e.printStackTrace();
                             }
                         }else {
-                            int action = dis.readInt();
-                            int x = dis.readInt();
-                            int y = dis.readInt();
                             System.out.println("(x,y) =  " + x + "," + y);
                             if (action == 1){
                                 robot.keyPress(VK_CONTROL);
@@ -113,7 +114,7 @@ public class Server {
                                 robot.keyRelease(VK_RIGHT);
                             }else if (action == 5){
                                 robot.keyPress(VK_LEFT);
-                                robot.keyRelease(VK_RIGHT);
+                                robot.keyRelease(VK_LEFT);
                             }
                         }
                     } else if (type.equals("exit")){
@@ -171,7 +172,7 @@ class CaptureScreenThread extends Thread{
 
     @Override
     public void run() {
-        while (type.equals("powerpoint")){
+        while (type.equals("powerpoint")||type == null){
             BufferedImage bufferedImage = robot.createScreenCapture(new Rectangle(screenWidth,screemHeight));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -180,7 +181,8 @@ class CaptureScreenThread extends Thread{
                 byte[] imgBytes = baos.toByteArray();
                 dos.writeInt(imgBytes.length);
                 dos.write(imgBytes,0, imgBytes.length);
-//                System.out.println(imgBytes.length);
+                robot.delay(100);
+                System.out.println(imgBytes.length);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -189,3 +191,4 @@ class CaptureScreenThread extends Thread{
 
 
 }
+
