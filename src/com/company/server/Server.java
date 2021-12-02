@@ -59,7 +59,6 @@ public class Server {
                                 robot.mouseMove((int) (nowx + dx * step), (int) (nowy + dy * step));
                             }
 
-
 //                        robot.mouseMove((int) nowx + x, (int) nowy + y);
                         } else if (wheel != 0) {
                             robot.mouseWheel(wheel);
@@ -98,11 +97,6 @@ public class Server {
                         }else {
                             System.out.println("(x,y) =  " + x + "," + y);
                             if (action == 1){
-                                robot.keyPress(VK_CONTROL);
-                                robot.keyPress(VK_P);
-                                robot.delay(10);
-                                robot.keyRelease(VK_P);
-                                robot.keyRelease(VK_CONTROL);
                                 robot.mouseMove(x,y);
                                 robot.mousePress(InputEvent.BUTTON1_MASK);
                             } else if (action == 2){
@@ -115,6 +109,12 @@ public class Server {
                             }else if (action == 5){
                                 robot.keyPress(VK_LEFT);
                                 robot.keyRelease(VK_LEFT);
+                            }else if (action == 6 || action == 7){
+                                robot.keyPress(VK_CONTROL);
+                                robot.keyPress(VK_P);
+                                robot.delay(10);
+                                robot.keyRelease(VK_P);
+                                robot.keyRelease(VK_CONTROL);
                             }
                         }
                     } else if (type.equals("exit")){
